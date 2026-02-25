@@ -33,33 +33,9 @@ def readData(fileName):
     #x_norm = StandardScaler().fit_transform(x)
     return x, y, df1, df2
 
-# try pca -- imagine theory suggests you look for a 1d latent representation for x2,x3,x7
-
-def ignore():
-    #ignore this part
-    dim = 1
-    vars2 = ['x2', 'x3', 'x7']
-    temp = df2.loc[:, vars2].values
-    pca2 = PCA(n_components=1)
-
-    # create 1 dimensional representation
-    latent_vars = pca2.fit_transform(temp)
-    # check to see if this is right
-
-    print ("Variance explained by each latent variable in PCA: ", pca2.explained_variance_ratio_)
-    print ("\n")
-
-    # create new dataframe with the latent variables from pca1
-    df2['pca1'] = latent_vars[:,0]
-    # add the latent variables to x_norm
-    x_norm = np.append(x_norm,latent_vars,1)
-
-
-
-
 def train_test_split_data(df2):
     # just an example of running a model with SOME of the columns
-    IVs = ['x1', 'x2', 'x5', 'x8']
+    IVs = ['x1','x2','x3','x4','x5','x6','x7','x8','x9']
 
     # create train / test split using dataframe
     x_train, x_test, y_train, y_test = train_test_split(
@@ -69,10 +45,3 @@ def train_test_split_data(df2):
         random_state=13
     )
     return x_train, x_test, y_train, y_test
-
-
-
-# make sure results make sense
-if __name__ == "__main__":
-    print (x_train.shape, y_train.shape)
-    print (x_test.shape, y_test.shape)
