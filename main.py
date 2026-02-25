@@ -1,63 +1,11 @@
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression 
 from sklearn.preprocessing import PolynomialFeatures 
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.linear_model import Lasso
+from linear_model import train_test_split, readData
 
-# grab data -- change path for your own file
-df1 = pd.read_csv("Desktop/Research/Assign1/assign1_25.csv")
-
-# print first few rows -- could also use df.head()
-print (df1.iloc[:3])
-# and get summary stats on variables
-print (df1.describe())
-
-df2 = df1.dropna()
-# and get summary stats on variables to check to see if any variables had missingness
-print (df2.describe())
-
-# create set of variables to use / exclude Y
-vars = ['x0', 'x1', 'x2', 'x3', 'x4', 'x5', 'x6', 'x7', 'x8']
-x = df2.loc[:, vars].values
-
-# also create Y while we're at it for use later on in regressions
-y = df2.loc[:, 'y'].values
-
-# normalize x
-x_norm = StandardScaler().fit_transform(x)
-
-# try pca -- imagine theory suggests you look for a 1d latent representation for x2,x3,x7
-dim = 1
-vars2 = ['x2', 'x3', 'x7']
-temp = df2.loc[:, vars2].values
-pca2 = PCA(n_components=1)
-
-# create 1 dimensional representation
-latent_vars = pca2.fit_transform(temp)
-# check to see if this is right
-
-print ("Variance explained by each latent variable in PCA: ", pca2.explained_variance_ratio_)
-print ("\n")
-
-# create new dataframe with the latent variables from pca1
-df2['pca1'] = latent_vars[:,0]
-# add the latent variables to x_norm
-x_norm = np.append(x_norm,latent_vars,1)
-
-
-# just an example of running a model with SOME of the columns
-IVs = ['x0', 'x1', 'x5', 'pca1']
-
-# create train / test split using dataframe
-x_train, x_test, y_train, y_test = train_test_split(df2.loc[:, IVs], df2.loc[:, 'y'], test_size=0.25, random_state=13)
-
-# make sure results make sense
-print (x_train.shape, y_train.shape)
-print (x_test.shape, y_test.shape)
+x_norm, x, y, df1, df2 = readData("data/assign1_25.csv")
+x_train, x_test, y_train, y_test = train_test_split(df2)
 
 # try both linear and polynomial of different degrees
 linear_model = LinearRegression(normalize=True)
