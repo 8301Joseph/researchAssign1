@@ -12,13 +12,13 @@ def readData(fileName):
     df1 = pd.read_csv(fileName)
 
     # print first few rows -- could also use df.head()
-    print (df1.iloc[:3])
+    #print (df1.iloc[:3])
     # and get summary stats on variables
-    print (df1.describe())
+    #print (df1.describe())
 
     df2 = df1.dropna()
     # and get summary stats on variables to check to see if any variables had missingness
-    print (df2.describe())
+    #print (df2.describe())
     # no missingness!
     # OR use df1.isna().sum().sum()
 
@@ -30,10 +30,8 @@ def readData(fileName):
     y = df2.loc[:, 'y'].values
 
     # normalize x
-    x_norm = StandardScaler().fit_transform(x)
-    return x_norm, x, y, df1, df2
-
-x_norm, x, y, df1, df2 = readData("data/assign1_25.csv")
+    #x_norm = StandardScaler().fit_transform(x)
+    return x, y, df1, df2
 
 # try pca -- imagine theory suggests you look for a 1d latent representation for x2,x3,x7
 
@@ -57,10 +55,11 @@ def ignore():
     x_norm = np.append(x_norm,latent_vars,1)
 
 
-# just an example of running a model with SOME of the columns
-IVs = ['x1', 'x2', 'x5', 'pca1']
 
-def train_test_split(df2):
+
+def train_test_split_data(df2):
+    # just an example of running a model with SOME of the columns
+    IVs = ['x1', 'x2', 'x5', 'x8']
 
     # create train / test split using dataframe
     x_train, x_test, y_train, y_test = train_test_split(
@@ -70,9 +69,10 @@ def train_test_split(df2):
         random_state=13
     )
     return x_train, x_test, y_train, y_test
-x_train, x_test, y_train, y_test = train_test_split(df2)
+
 
 
 # make sure results make sense
-print (x_train.shape, y_train.shape)
-print (x_test.shape, y_test.shape)
+if __name__ == "__main__":
+    print (x_train.shape, y_train.shape)
+    print (x_test.shape, y_test.shape)
