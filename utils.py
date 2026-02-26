@@ -37,9 +37,10 @@ def trainModels(x_train, x_test, y_train, y_test):
     p2_predict = p2_1.predict(p2_test)
     p3_predict = p3_1.predict(p3_test)
 
-    print("MSE:" + mean_squared_error(lin1_predict, y_test))
-    print("MSE:" + mean_squared_error(p2_predict, y_test))
-    print("MSE:" + mean_squared_error(p3_predict, y_test))
+    print(f"Linear MSE: {mean_squared_error(lin1_predict, y_test)}")
+    print (f"Linear RMSE: {mean_squared_error(lin1_predict, y_test)**(.5)}")
+    print(f"P2 MSE: {mean_squared_error(p2_predict, y_test)}")
+    print(f"P3 MSE: {mean_squared_error(p3_predict, y_test)}")
 
     return p2_train, p2_test, p3_train, p3_test
 
@@ -49,10 +50,8 @@ def trainModels(x_train, x_test, y_train, y_test):
 
 def optimiseRegularization(train, test, y_test, y_train):
     lambdas = (.1, .5, 1, 2.5, 5, 7.5, 10, 20, 50, 100, 200)
-    print("RMSE trials for lambdas")
     for i in lambdas:
         lasso_reg = Lasso(alpha = i, max_iter=200000)
         lasso1 = lasso_reg.fit(train, y_train)
         lasso1_predict = lasso1.predict(test)
         print (f"{i}: {mean_squared_error(y_test, lasso1_predict)**(.5)}")
-
