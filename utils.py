@@ -4,6 +4,8 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import Lasso
 
+from sklearn.linear_model import LassoCV
+
 
 def trainModels(x_train, x_test, y_train, y_test):
     #normalise
@@ -15,8 +17,6 @@ def trainModels(x_train, x_test, y_train, y_test):
 
     # try both linear and polynomial of different degrees
     linear_model = LinearRegression()
-    p2_model = LinearRegression()
-    p3_model = LinearRegression()
 
     # create polynomial features
     p2_features = PolynomialFeatures(degree=2)
@@ -29,45 +29,42 @@ def trainModels(x_train, x_test, y_train, y_test):
 
     # now do estimation of models
     lin_1 = linear_model.fit(x_train, y_train)
-    p2_1 = p2_model.fit(p2_train, y_train)
+    '''p2_1 = p2_model.fit(p2_train, y_train)
     p3_1 = p3_model.fit(p3_train, y_train)
 
-    # predict values for test sets
+    # predict values for test sets'''
     lin1_predict = lin_1.predict(x_test)
-    p2_predict = p2_1.predict(p2_test)
+    '''p2_predict = p2_1.predict(p2_test)
     p3_predict = p3_1.predict(p3_test)
 
-    print(f"Linear MSE: {mean_squared_error(lin1_predict, y_test)}")
     print (f"Linear RMSE: {mean_squared_error(lin1_predict, y_test)**(.5)}")
-    print(f"P2 MSE: {mean_squared_error(p2_predict, y_test)}")
-    print(f"P3 MSE: {mean_squared_error(p3_predict, y_test)}")
+    print(f"P2 RMSE: {mean_squared_error(p2_predict, y_test)**(.5)}")
+    print(f"P3 RMSE: {mean_squared_error(p3_predict, y_test)**(.5)}")'''
 
-    return p2_train, p2_test, p3_train, p3_test, p2_features
+    return p2_train, p2_test, p3_train, p3_test, p2_features, lin1_predict
 
 
 # try different lambdas with regularization
 # remember: alpha here is lambda in most treatments
 
-def optimiseRegularization(train, test, y_test, y_train):
-    lambdas = (.1, .5, 1, 2.5, 5, 7.5, 10, 20, 50, 100, 200)
-    for i in lambdas:
-        lasso_reg = Lasso(alpha = i, max_iter=200000)
-        lasso1 = lasso_reg.fit(train, y_train)
-        lasso1_predict = lasso1.predict(test)
-        print (f"{i}: {mean_squared_error(y_test, lasso1_predict)**(.5)}")
+def optimiseRegularization(x_train, y_train):
+    """
+    Select lambda (alpha) using cross-validation on TRAIN only.
+    Returns: fitted LassoCV model, optimal alpha
+    """
+    lasso = LassoCV(cv=5, max_iter=200000)
+    lasso.fit(x_train, y_train)
+    return lasso, lasso.alpha_
 
 
-def optimiseRegularizationV2(train, test, y_test, y_train):
-    min = 999
-    i = 6
-    while i < 10:
-        lasso_reg = Lasso(alpha = i, max_iter=200000)
-        lasso1 = lasso_reg.fit(train, y_train)
-        lasso1_predict = lasso1.predict(test)
-        rmse = mean_squared_error(y_test, lasso1_predict)**(.5)
-        if rmse < min: 
-            min = rmse
-            optimalLambda = i
-            best_model = lasso1
-        i += 0.1
-    return optimalLambda, min, best_model
+def refit(x, y):
+    #refit degree 2 f(x) on entire training set
+    lasso = LassoCV(cv=5, max_iter=200000)
+    lasso.fit(x, y)
+    return lasso, lasso.alpha_
+
+
+
+
+
+
