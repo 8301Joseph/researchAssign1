@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     p2_train, p2_test, p3_train, p3_test, p2_features = trainModels(x_train, x_test, y_train, y_test)
 
-    #regularization()
+    regularization()
 
 
 #Linear RMSE: 350.09
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
 #continue exploring P2 with lambda between 6 and 10
 
-    optimalLambda, minRmse, best_model = optimiseRegularizationV2(p2_train, p2_test, y_test, y_train)
+    '''optimalLambda, minRmse, best_model = optimiseRegularizationV2(p2_train, p2_test, y_test, y_train)
     print(f"Optimal lambda value: {optimalLambda:.2f} which provides an RMSE of {minRmse:.2f}")
     print("\nModel equation:")
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     ]
 
     equation = " + ".join(terms)
-    print(f"f(x) = {intercept:.2f} + {equation}")
+    print(f"f(x) = {intercept:.2f} + {equation}")'''
 
 #best model
 
