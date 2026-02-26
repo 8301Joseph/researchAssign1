@@ -42,7 +42,7 @@ def trainModels(x_train, x_test, y_train, y_test):
     print(f"P2 MSE: {mean_squared_error(p2_predict, y_test)}")
     print(f"P3 MSE: {mean_squared_error(p3_predict, y_test)}")
 
-    return p2_train, p2_test, p3_train, p3_test
+    return p2_train, p2_test, p3_train, p3_test, p2_features
 
 
 # try different lambdas with regularization
@@ -55,3 +55,19 @@ def optimiseRegularization(train, test, y_test, y_train):
         lasso1 = lasso_reg.fit(train, y_train)
         lasso1_predict = lasso1.predict(test)
         print (f"{i}: {mean_squared_error(y_test, lasso1_predict)**(.5)}")
+
+
+def optimiseRegularizationV2(train, test, y_test, y_train):
+    min = 999
+    i = 6
+    while i < 10:
+        lasso_reg = Lasso(alpha = i, max_iter=200000)
+        lasso1 = lasso_reg.fit(train, y_train)
+        lasso1_predict = lasso1.predict(test)
+        rmse = mean_squared_error(y_test, lasso1_predict)**(.5)
+        if rmse < min: 
+            min = rmse
+            optimalLambda = i
+            best_model = lasso1
+        i += 0.1
+    return optimalLambda, min, best_model
