@@ -1,6 +1,8 @@
 from data_prep import train_test_split_data, readData
 from utils import trainModels, optimiseRegularization, refit
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
+import numpy as np
 
 def regularization(p2_train, p2_test, p3_train, p3_test, y_train, y_test):
 
