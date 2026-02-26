@@ -2,7 +2,7 @@ from data_prep import train_test_split_data, readData
 from utils import trainModels, optimiseRegularization, refit
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
-import numpy as np
+
 
 def regularization(p2_train, p2_test, p3_train, p3_test, y_train, y_test):
 
@@ -24,6 +24,39 @@ def linearModel(y_test, lin1_predict):
     print("\nLinear Model")
     print(f"Test RMSE: {mean_squared_error(y_test, lin1_predict) ** 0.5:.3f}")
 
+def printFinaleqn():
+    # ----- REFIT DEGREE 2 LASSO ON FULL CLEAN SAMPLE -----
+
+    # Full cleaned sample already available as df2
+    X_full = df2.drop(columns=["y"]).values
+    y_full = df2["y"].values
+
+    scaler = StandardScaler()
+    X_full_scaled = scaler.fit_transform(X_full)
+
+    X_full_p2 = p2_features.fit_transform(X_full_scaled)
+
+    final_model, final_alpha = refit(X_full_p2, y_full)
+
+    feature_names = p2_features.get_feature_names_out(df2.drop(columns=["y"]).columns)
+    coefs = final_model.coef_
+    intercept = final_model.intercept_
+
+    print("\nFINAL DEGREE 2 LASSO MODEL (Full Sample)")
+    print(f"Optimal lambda: {final_alpha:.3f}")
+
+    equation = f"y = {intercept:.6f}"
+    for name, coef in zip(feature_names, coefs):
+        if abs(coef) > 1e-6:
+            sign = "+" if coef >= 0 else "-"
+            equation += f" {sign} {abs(coef):.4f}*{name}"
+
+    print("\nFinal Equation:")
+    print(equation)
+
+
+
+
 
 if __name__ == "__main__":
     x, y, df1, df2 = readData("data/assign1_25.csv")
@@ -33,7 +66,8 @@ if __name__ == "__main__":
     linearModel(y_test, lin1_predict)
     regularization(p2_train, p2_test, p3_train, p3_test, y_train, y_test)
 
-    refit(x, y)
+    printFinaleqn()
+
 
 
 #Linear RMSE: 350.094
@@ -44,3 +78,8 @@ if __name__ == "__main__":
 y=f(x)+e 
 where 
 f(x) is a degree 2 Lasso-selected polynomial model.'''
+
+
+"y = -192.633145 + 16.3014*x1 + 104.1009*x2 + 92.4932*x3 + "
+"513.5162*x6 - 8.4396*x2^2 - 11.8651*x2 x3 - 219.1545*x6^2 "
+"- 11.3830*x6 x7 - 16.1697*x7 x9 - 4.6263*x8 x9"
