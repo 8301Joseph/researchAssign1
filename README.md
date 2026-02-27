@@ -1,6 +1,6 @@
 **Overview**
 
-This project applies regression techniques to analyze a structured dataset. The workflow includes data preprocessing, feature scaling, dimensionality reduction (PCA), and model comparison using linear and regularized regression methods.
+This project applies regression techniques to analyze a structured dataset. The workflow includes data preprocessing, feature scaling, and model comparison using linear and regularized regression methods.
 
 **Methods**
 
