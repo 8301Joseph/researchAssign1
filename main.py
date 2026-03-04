@@ -36,7 +36,7 @@ def printFinaleqn():
 
     X_full_p2 = p2_features.fit_transform(X_full_scaled)
 
-    final_model, final_alpha = refit(X_full_p2, y_full)
+    final_model, final_alpha = refit(X_full_p2, y_full, 1.5)
 
     feature_names = p2_features.get_feature_names_out(df2.drop(columns=["y"]).columns)
     coefs = final_model.coef_

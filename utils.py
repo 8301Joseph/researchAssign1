@@ -57,11 +57,17 @@ def optimiseRegularization(x_train, y_train):
     return lasso, lasso.alpha_
 
 
-def refit(x, y):
+def refit(x, y, lambdaMultiplier):
     #refit degree 2 f(x) on entire training set
-    lasso = LassoCV(cv=5, max_iter=200000)
+    lasso_cv = LassoCV(cv=5, max_iter=200000)
+    lasso_cv.fit(x, y)
+
+    alpha = lasso_cv.alpha_ * lambdaMultiplier # increase regularization
+
+    lasso = Lasso(alpha=alpha)
     lasso.fit(x, y)
-    return lasso, lasso.alpha_
+
+    return lasso, lasso.alpha
 
 
 
