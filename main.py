@@ -24,7 +24,7 @@ def linearModel(y_test, lin1_predict):
     print("\nLinear Model")
     print(f"Test RMSE: {mean_squared_error(y_test, lin1_predict) ** 0.5:.3f}")
 
-def printFinaleqn():
+def printFinaleqn(lambdaMultiplier):
     # ----- REFIT DEGREE 2 LASSO ON FULL CLEAN SAMPLE -----
 
     # Full cleaned sample already available as df2
@@ -36,7 +36,7 @@ def printFinaleqn():
 
     X_full_p2 = p2_features.fit_transform(X_full_scaled)
 
-    final_model, final_alpha = refit(X_full_p2, y_full, 1.5)
+    final_model, final_alpha = refit(X_full_p2, y_full, lambdaMultiplier)
 
     feature_names = p2_features.get_feature_names_out(df2.drop(columns=["y"]).columns)
     coefs = final_model.coef_
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     linearModel(y_test, lin1_predict)
     regularization(p2_train, p2_test, p3_train, p3_test, y_train, y_test)
 
-    printFinaleqn()
+    printFinaleqn(1.5)
 
 
 
